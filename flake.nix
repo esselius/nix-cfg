@@ -8,21 +8,28 @@
     home.url = "github:nix-community/home-manager";
   };
 
-  outputs = { self, nixpkgs, darwin, home }: {
-    darwinConfigurations.Pepps-MacBook-Pro = darwin.lib.darwinSystem {
-      modules = [
-        ./darwin-configuration.nix
-        home.darwinModules.home-manager
-        {
-          home-manager.backupFileExtension = "backup";
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
+  outputs = { self, nixpkgs, darwin, home }:
+    let
+      darwinConfig = username: darwin.lib.darwinSystem {
+        modules = [
+          ./darwin-configuration.nix
+          home.darwinModules.home-manager
+          {
+            home-manager.backupFileExtension = "backup";
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
 
-          home-manager.users.peteresselius = import ./home.nix;
-        }
-      ];
+            home-manager.users.${username} = import ./home.nix;
+          }
+        ];
+      };
+    in
+    {
+      darwinConfigurations = {
+        Pepps-MacBook-Pro    = darwinConfig "peteresselius";
+        Vagrants-MacBook-Pro = darwinConfig "vagrant";
+      };
+
+      packages.x86_64-darwin.nix-darwin-installer = self.darwinConfigurations.Pepps-MacBook-Pro.system;
     };
-
-    packages.x86_64-darwin.nix-darwin-installer = self.darwinConfigurations.Pepps-MacBook-Pro.system;
-  };
 }

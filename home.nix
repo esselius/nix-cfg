@@ -1,6 +1,10 @@
 { pkgs, ... }:
 
 {
+  home.packages = with pkgs; [
+    nixpkgs-fmt
+  ];
+
   programs = {
     home-manager.enable = true;
 
