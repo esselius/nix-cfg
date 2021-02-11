@@ -1,11 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  environment.systemPackages = [
-    pkgs.vim
-    pkgs.git
-  ];
-
   services.nix-daemon.enable = true;
 
   nix = {
@@ -19,6 +14,10 @@
     enable = true;
     useBabelfish = true;
     babelfishPackage = pkgs.babelfish;
+
+    shellInit = ''
+      source /etc/fish/nixos-env-preinit.fish
+    '';
   };
 
   system.stateVersion = 4;
