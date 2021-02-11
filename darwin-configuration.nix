@@ -20,5 +20,12 @@
     '';
   };
 
+  programs.gnupg = {
+    agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
+  };
+
   system.stateVersion = 4;
 }
