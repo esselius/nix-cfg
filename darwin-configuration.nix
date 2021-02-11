@@ -15,7 +15,11 @@
   };
 
   programs.zsh.enable = true;
-  programs.fish.enable = true;
+  programs.fish = {
+    enable = true;
+    useBabelfish = true;
+    babelfishPackage = pkgs.babelfish;
+  };
 
   system.stateVersion = 4;
 }
