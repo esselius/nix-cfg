@@ -12,7 +12,8 @@
         "gcan!" = "git commit -v -a --no-edit --amend";
         gcam    = "git commit -a -m";
         gp      = "git push";
-        gpsup   = "git push --force-with-lease";
+        gpsup   = "git push --set-upstream- origin (git rev-parse --abbrev-ref HEAD)";
+        gpf     = "git push --force-with-lease";
       };
 
       shellAbbrs = {
