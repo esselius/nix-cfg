@@ -17,7 +17,7 @@ $ nix-env -iA nixpkgs.nixFlakes
 3. Bootstrap System Config
 
 ```
-$ nix build github:esselius/nix-cfg#darwinConfigurations.[name].system
+$ nix --experimental-features "nix-command flakes" build github:esselius/nix-cfg#darwinConfigurations.[name].system
 $ ./result/sw/bin/darwin-rebuild switch --flake github:esselius/nix-cfg
 $ unlink result
 ```
