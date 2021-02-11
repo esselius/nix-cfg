@@ -11,10 +11,11 @@
   nix = {
     package = pkgs.nixFlakes;
     extraOptions = "experimental-features = nix-command flakes";
-    trustedUsers = ["@admin"];
+    trustedUsers = [ "root" "@admin" ];
   };
 
   programs.zsh.enable = true;
+  programs.fish.enable = true;
 
   system.stateVersion = 4;
 }
