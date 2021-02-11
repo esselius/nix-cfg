@@ -8,21 +8,21 @@
       enable = true;
 
       shellAliases = {
-        gs = "git status -sb";
+        gs      = "git status -sb";
         "gcan!" = "git commit -v -a --no-edit --amend";
-        gcam = "git commit -a -m";
-        gp = "git push";
-        gpsup = "git push --force-with-lease";
+        gcam    = "git commit -a -m";
+        gp      = "git push";
+        gpsup   = "git push --force-with-lease";
       };
 
       shellAbbrs = {
-        gco = "git checkout";
+        gco  = "git checkout";
 
         k    = "kubectl";
         kcuc = "kubectl config use-context";
         kccc = "kubectl config current-context";
 
-        rg = "rg -S --hidden --glob '!.git/*'";
+        rg   = "rg -S --hidden --glob '!.git/*'";
       };
 
       shellInit = ''
