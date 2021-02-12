@@ -17,12 +17,11 @@
 
       config = {
         focus_follows_mouse = "autofocus";
-        window_topmost = "on";
-        layout = "bsp";
       };
 
       extraConfig = ''
         yabai -m rule --add app="^System Preferences$" manage=off
+        yabai -m rule --add app="^Activity Monitor$" manage=off sticky=on layer=above
         yabai -m rule --add app="^Viscosity$" manage=off
         yabai -m rule --add app="^Intel Power Gadget$" manage=off
         yabai -m rule --add app="^Screen$" manage=off
