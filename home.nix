@@ -4,6 +4,8 @@
   home.packages = with pkgs; [
     nixpkgs-fmt
     cmatrix
+    google-cloud-sdk
+    sbt
   ];
 
   programs = {
@@ -26,6 +28,7 @@
       enable = true;
 
       shellAliases = {
+        gcb     = "git checkout -b";
         gs      = "git status -sb";
         "gcan!" = "git commit -v -a --no-edit --amend";
         gcam    = "git commit -a -m";
