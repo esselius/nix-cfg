@@ -10,6 +10,9 @@
 
   outputs = { self, nixpkgs, darwin, home }:
     let
+      pkgs = import nixpkgs {
+        system = "x86_64-darwin";
+      };
       darwinConfig = username: darwin.lib.darwinSystem {
         modules = [
           ./darwin-configuration.nix
@@ -26,10 +29,14 @@
     in
     {
       darwinConfigurations = {
-        Pepps-MacBook-Pro    = darwinConfig "peteresselius";
+        Pepps-MacBook-Pro = darwinConfig "peteresselius";
         Vagrants-MacBook-Pro = darwinConfig "vagrant";
       };
 
-      packages.x86_64-darwin.nix-darwin-installer = self.darwinConfigurations.Pepps-MacBook-Pro.system;
+      apps.x86_64-darwin = import ./lib/scripts.nix { inherit pkgs darwin; flake = self; };
+
+      devShell.x86_64-darwin = pkgs.mkShell {
+        buildInputs = pkgs.lib.attrsets.mapAttrsToList (_: v: v) self.apps.x86_64-darwin;
+      };
     };
 }
