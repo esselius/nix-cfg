@@ -23,7 +23,7 @@
       extraConfig = ''
         yabai -m rule --add app="^System Preferences$" manage=off
         yabai -m rule --add app="^Viscosity$" manage=off
-        yabai -m rule --add app="^Screen$" manage=off
+        yabai -m rule --add app="^Intel Power Gadget$" manage=off
       '';
     };
 
@@ -31,14 +31,14 @@
       enable = true;
       package = pkgs.skhd;
       skhdConfig = ''
+        # toggle split
+        shift + alt - space : yabai -m window --toggle split
+
         # rebalance space
-        cmd + shift - return : yabai -m space --balance
+        shift + cmd - space  : yabai -m space --balance
 
         # toggle fullscreen
-        cmd - return         : yabai -m window --toggle zoom-fullscreen
-
-        # toggle split
-        alt + shift - return : yabai -m window --toggle split
+        shift + cmd - return : yabai -m window --toggle zoom-fullscreen
 
         # open terminal
         alt - return         : open -a kitty
