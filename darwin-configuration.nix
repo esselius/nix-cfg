@@ -35,10 +35,13 @@
         cmd + shift - return : yabai -m space --balance
 
         # toggle fullscreen
-        cmd - return : yabai -m window --toggle zoom-fullscreen
+        cmd - return         : yabai -m window --toggle zoom-fullscreen
+
+        # toggle split
+        alt + shift - return : yabai -m window --toggle split
 
         # open terminal
-        alt - return : open -a kitty
+        alt - return         : open -a kitty
       '';
     };
   };

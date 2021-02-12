@@ -18,7 +18,7 @@
       settings = {
         font_size = "15.0";
         cursor_shape = "underline";
-        clipboard_control = "write-clipboard write-primary";
+        clipboard_control = "write-clipboard write-primary no-append";
       };
     };
 
