@@ -14,25 +14,31 @@
       enable = true;
       package = pkgs.yabai;
       enableScriptingAddition = true;
-      config = {
-        focus_follows_mouse = "off";
 
-        layout = "bsp";
+      config = {
+        focus_follows_mouse = "autofocus";
+        window_topmost = "on";
       };
+
+      extraConfig = ''
+        yabai -m rule --add app="^System Preferences$" manage=off
+        yabai -m rule --add app="^Viscosity$" manage=off
+        yabai -m rule --add app="^Screen$" manage=off
+      '';
     };
 
     skhd = {
       enable = true;
       package = pkgs.skhd;
       skhdConfig = ''
-        # move window
-        ctrl + alt - left : yabai -m window --warp west
-        ctrl + alt - down : yabai -m window --warp south
-        ctrl + alt - up : yabai -m window --warp north
-        ctrl + alt - right : yabai -m window --warp east
+        # rebalance space
+        cmd + shift - return : yabai -m space --balance
+
+        # toggle fullscreen
+        cmd - return : yabai -m window --toggle zoom-fullscreen
 
         # open terminal
-        cmd - return : open -a kitty
+        alt - return : open -a kitty
       '';
     };
   };
@@ -57,8 +63,13 @@
     };
   };
 
-  system.defaults.finder = {
-    CreateDesktop = false;
+  system.defaults = {
+    NSGlobalDomain = {
+      _HIHideMenuBar = true;
+    };
+    finder = {
+      CreateDesktop = false;
+    };
   };
 
   system.stateVersion = 4;

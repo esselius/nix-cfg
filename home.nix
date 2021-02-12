@@ -3,6 +3,7 @@
 {
   home.packages = with pkgs; [
     nixpkgs-fmt
+    cmatrix
   ];
 
   programs = {
@@ -10,6 +11,15 @@
 
     kitty = {
       enable = true;
+      font = {
+        name = "Fira Code";
+        package = pkgs.fira-code;
+      };
+      settings = {
+        font_size = "15.0";
+        cursor_shape = "underline";
+        clipboard_control = "write-clipboard write-primary";
+      };
     };
 
     fish = {
