@@ -6,37 +6,66 @@
     darwin.url = "github:lnl7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home.url = "github:nix-community/home-manager";
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, darwin, home }:
+  outputs = { self, nixpkgs, darwin, home, flake-utils }:
     let
-      pkgs = import nixpkgs {
-        system = "x86_64-darwin";
-      };
-      darwinConfig = username: darwin.lib.darwinSystem {
-        modules = [
-          ./darwin-configuration.nix
-          home.darwinModules.home-manager
-          {
-            home-manager.backupFileExtension = "backup";
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
+      systems = [ "x86_64-linux" "x86_64-darwin" ];
+      flake = flake-utils.lib.eachSystem systems (system:
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+          };
 
-            home-manager.users.${username} = import ./home.nix;
-          }
-        ];
-      };
+          scripts = import ./lib/scripts.nix { inherit pkgs darwin; flake = self; };
+
+          darwinConfig = username: darwin.lib.darwinSystem {
+            modules = [
+              ./darwin-configuration.nix
+              home.darwinModules.home-manager
+              {
+                home-manager.backupFileExtension = "backup";
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+
+                home-manager.users.${username} = import ./home.nix;
+              }
+            ];
+          };
+
+          homeDirPrefix = pkgs: "/home";
+
+          homeManagerConfig = username: home.lib.homeManagerConfiguration {
+            inherit username system pkgs;
+            homeDirectory = homeDirPrefix pkgs;
+            configuration = import ./home.nix;
+          };
+        in
+        {
+          darwinConfigurations = {
+            Pepps-MacBook-Pro = darwinConfig "peteresselius";
+            Vagrants-MacBook-Pro = darwinConfig "vagrant";
+          };
+
+          homeManagerConfigurations = {
+            peteresselius = homeManagerConfig "peteresselius";
+            vagrant = homeManagerConfig "vagrant";
+          };
+
+          apps = scripts;
+
+          devShell = pkgs.mkShell {
+            buildInputs = with scripts; [
+              switchDarwin
+              switchHome
+            ];
+          };
+        }
+      );
     in
-    {
-      darwinConfigurations = {
-        Pepps-MacBook-Pro = darwinConfig "peteresselius";
-        Vagrants-MacBook-Pro = darwinConfig "vagrant";
+      flake // {
+        darwinConfigurations = flake.darwinConfigurations.x86_64-darwin;
+        homeManagerConfigurations = flake.homeManagerConfigurations.x86_64-linux;
       };
-
-      apps.x86_64-darwin = import ./lib/scripts.nix { inherit pkgs darwin; flake = self; };
-
-      devShell.x86_64-darwin = pkgs.mkShell {
-        buildInputs = pkgs.lib.attrsets.mapAttrsToList (_: v: v) self.apps.x86_64-darwin;
-      };
-    };
 }

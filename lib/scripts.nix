@@ -33,4 +33,26 @@ in
 
     ${flakesDarwinSystem.system}/sw/bin/darwin-rebuild switch --flake ${flake} "$@"
   '';
+
+  switchHome = writeShellScriptBin "switch-home" ''
+    set -euo pipefail
+    set -x
+
+    if ! grep -q flakes /etc/nix/nix.conf; then
+      echo "experimental-features = nix-command flakes" | sudo tee -a /etc/nix/nix.conf
+      sudo killall nix-daemon
+      sleep 1
+    fi
+
+    export PATH=${lib.makeBinPath [ gitMinimal jq nixUnstable ]}
+    usr="''${1:-$USER}"
+
+    1>&2 echo "Building configuration..."
+
+    out="$(nix build --json ".#homeManagerConfigurations.$usr.activationPackage" | jq -r .[].outputs.out)"
+
+    1>&2 echo "Activating configuration..."
+
+    "$out"/activate
+  '';
 }
