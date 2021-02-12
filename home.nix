@@ -8,6 +8,10 @@
   programs = {
     home-manager.enable = true;
 
+    kitty = {
+      enable = true;
+    };
+
     fish = {
       enable = true;
 
