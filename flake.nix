@@ -12,60 +12,84 @@
   outputs = { self, nixpkgs, darwin, home, flake-utils }:
     let
       systems = [ "x86_64-linux" "x86_64-darwin" ];
-      flake = flake-utils.lib.eachSystem systems (system:
-        let
-          pkgs = import nixpkgs {
-            inherit system;
-          };
+      flake = flake-utils.lib.eachSystem systems
+        (system:
+          let
+            pkgs = import nixpkgs {
+              inherit system;
+            };
 
-          scripts = import ./lib/scripts.nix { inherit pkgs darwin; flake = self; };
+            scripts = import ./lib/scripts.nix { inherit pkgs darwin; flake = self; };
 
-          darwinConfig = username: darwin.lib.darwinSystem {
-            modules = [
-              ./darwin-configuration.nix
-              home.darwinModules.home-manager
-              {
-                home-manager.backupFileExtension = "backup";
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
+            darwinConfig = username: darwin.lib.darwinSystem {
+              modules = [
+                ./darwin-configuration.nix
+                home.darwinModules.home-manager
+                {
+                  home-manager.backupFileExtension = "backup";
+                  home-manager.useGlobalPkgs = true;
+                  home-manager.useUserPackages = true;
 
-                home-manager.users.${username} = import ./home.nix;
-              }
-            ];
-          };
+                  home-manager.users.${username} = import ./home.nix;
+                }
+              ];
+            };
 
-          homeDirPrefix = pkgs: "/home";
+            nixosConfig = username: nixpkgs.lib.nixosSystem {
+              inherit system;
 
-          homeManagerConfig = username: home.lib.homeManagerConfiguration {
-            inherit username system pkgs;
-            homeDirectory = homeDirPrefix pkgs;
-            configuration = import ./home.nix;
-          };
-        in
-        {
-          darwinConfigurations = {
-            Pepps-MacBook-Pro = darwinConfig "peteresselius";
-            Vagrants-MacBook-Pro = darwinConfig "vagrant";
-          };
+              modules = [
+                ./configuration.nix
+                home.nixosModules.home-manager
+                {
+                  home-manager.backupFileExtension = "backup";
+                  home-manager.useGlobalPkgs = true;
+                  home-manager.useUserPackages = true;
 
-          homeManagerConfigurations = {
-            peteresselius = homeManagerConfig "peteresselius";
-            vagrant = homeManagerConfig "vagrant";
-          };
+                  home-manager.users.${username} = import ./home.nix;
+                }
+              ];
+            };
 
-          apps = scripts;
 
-          devShell = pkgs.mkShell {
-            buildInputs = with scripts; [
-              switchDarwin
-              switchHome
-            ];
-          };
-        }
-      );
+            homeDirPrefix = pkgs: "/home";
+
+            homeManagerConfig = username: home.lib.homeManagerConfiguration {
+              inherit username system pkgs;
+              homeDirectory = homeDirPrefix pkgs;
+              configuration = import ./home.nix;
+            };
+          in
+          {
+            nixosConfigurations = {
+              nixos = nixosConfig "peteresselius";
+            };
+
+            darwinConfigurations = {
+              Pepps-MacBook-Pro = darwinConfig "peteresselius";
+              Vagrants-MacBook-Pro = darwinConfig "vagrant";
+            };
+
+            homeManagerConfigurations = {
+              peteresselius = homeManagerConfig "peteresselius";
+              vagrant = homeManagerConfig "vagrant";
+            };
+
+            apps = scripts;
+
+            devShell = pkgs.mkShell {
+              buildInputs = with scripts; [
+                switchNixOS
+                switchDarwin
+                switchHome
+              ];
+            };
+          }
+        );
     in
-      flake // {
-        darwinConfigurations = flake.darwinConfigurations.x86_64-darwin;
-        homeManagerConfigurations = flake.homeManagerConfigurations.x86_64-linux;
-      };
+    flake // {
+      darwinConfigurations = flake.darwinConfigurations.x86_64-darwin;
+      homeManagerConfigurations = flake.homeManagerConfigurations.x86_64-linux;
+      nixosConfigurations = flake.nixosConfigurations.x86_64-linux;
+    };
 }

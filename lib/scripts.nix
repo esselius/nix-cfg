@@ -5,6 +5,9 @@ with pkgs; let
   };
 in
 {
+  switchNixOS = writeShellScriptBin "switch-darwin" ''
+    nixos-rebuild switch --flake ${flake} "$@"
+  '';
   switchDarwin = writeShellScriptBin "switch-darwin" ''
     set -euo pipefail
 
