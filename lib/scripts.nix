@@ -5,7 +5,7 @@ with pkgs; let
   };
 in
 {
-  switchNixOS = writeShellScriptBin "switch-darwin" ''
+  switchNixOS = writeShellScriptBin "switch-nixos" ''
     nixos-rebuild switch --flake ${flake} "$@"
   '';
   switchDarwin = writeShellScriptBin "switch-darwin" ''

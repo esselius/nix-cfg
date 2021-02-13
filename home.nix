@@ -6,6 +6,7 @@
     cmatrix
     google-cloud-sdk
     sbt
+    cowsay
   ];
 
   programs = {
