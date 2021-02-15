@@ -16,7 +16,20 @@
       enableScriptingAddition = false;
 
       config = {
-        focus_follows_mouse = "autofocus";
+        layout                = "bsp";
+
+        top_padding           = "10";
+        bottom_padding        = "10";
+        left_padding          = "10";
+        right_padding         = "10";
+        window_gap            = "10";
+
+        auto_balance          = "on";
+        focus_follows_mouse   = "autofocus";
+
+        mouse_modifier        = "cmd";
+        mouse_action1         = "resize";
+        mouse_drop_action     = "swap";
       };
 
       extraConfig = ''
@@ -24,7 +37,6 @@
         yabai -m rule --add app="^Activity Monitor$" manage=off sticky=on layer=above
         yabai -m rule --add app="^Viscosity$" manage=off
         yabai -m rule --add app="^Intel Power Gadget$" manage=off
-        yabai -m rule --add app="^Screen$" manage=off
       '';
     };
 
@@ -32,6 +44,12 @@
       enable = true;
       package = pkgs.skhd;
       skhdConfig = ''
+        # move window
+        shift + cmd - h : yabai -m window --warp west
+        shift + cmd - j : yabai -m window --warp south
+        shift + cmd - k : yabai -m window --warp north
+        shift + cmd - l : yabai -m window --warp east
+
         # toggle split
         shift + alt - space : yabai -m window --toggle split
 

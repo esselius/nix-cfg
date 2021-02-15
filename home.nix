@@ -24,7 +24,7 @@
         package = pkgs.fira-code;
       };
       settings = {
-        font_size = "15.0";
+        font_size = "14.0";
         cursor_shape = "underline";
         clipboard_control = "write-clipboard write-primary no-append";
       };
@@ -40,7 +40,7 @@
         gcam    = "git commit -a -m";
         gl      = "git pull";
         gp      = "git push";
-        gpsup   = "git push --set-upstream- origin (git rev-parse --abbrev-ref HEAD)";
+        gpsup   = "git push --set-upstream origin (git rev-parse --abbrev-ref HEAD)";
         gpf     = "git push --force-with-lease";
       };
 
