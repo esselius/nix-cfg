@@ -24,6 +24,7 @@
             darwinConfig = username: darwin.lib.darwinSystem {
               modules = [
                 ./darwin-configuration.nix
+                ./modules/yubikey-agent.nix
                 home.darwinModules.home-manager
                 {
                   home-manager.backupFileExtension = "backup";
@@ -31,6 +32,8 @@
                   home-manager.useUserPackages = true;
 
                   home-manager.users.${username} = import ./home.nix;
+
+                  services.yubikey-agent.enable = true;
                 }
               ];
             };

@@ -76,13 +76,6 @@
         source /etc/fish/nixos-env-preinit.fish
       '';
     };
-
-    gnupg = {
-      agent = {
-        enable = true;
-        enableSSHSupport = true;
-      };
-    };
   };
 
   system.defaults = {
