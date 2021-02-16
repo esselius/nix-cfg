@@ -27,7 +27,7 @@
         auto_balance          = "on";
         focus_follows_mouse   = "autofocus";
 
-        mouse_modifier        = "cmd";
+        mouse_modifier        = "alt";
         mouse_action1         = "resize";
         mouse_drop_action     = "swap";
       };
