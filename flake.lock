@@ -20,6 +20,23 @@
         "type": "github"
       }
     },
+    "dns-heaven": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1592378049,
+        "narHash": "sha256-LwIugG9nbj2CtlyftG7SbTk3+M3mweg1rCH8wcnRvoA=",
+        "owner": "jduepmeier",
+        "repo": "dns-heaven",
+        "rev": "4089ea06243517a8e7bdcfbcbafc724995b13bd1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jduepmeier",
+        "ref": "v1.1.0",
+        "repo": "dns-heaven",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "locked": {
         "lastModified": 1610051610,
@@ -85,6 +102,7 @@
     "root": {
       "inputs": {
         "darwin": "darwin",
+        "dns-heaven": "dns-heaven",
         "flake-utils": "flake-utils",
         "home": "home",
         "nixpkgs": "nixpkgs_2"

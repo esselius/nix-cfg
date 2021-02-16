@@ -1,6 +1,4 @@
-# Global configuration for yubikey-agent.
-
-{ config, lib, pkgs, ... }:
+{ config, lib, ... }:
 
 with lib;
 let
@@ -20,25 +18,25 @@ in
 
       package = mkOption {
         type = types.package;
-        default = pkgs.yubikey-agent;
+        default = null;
         defaultText = "pkgs.yubikey-agent";
         description = ''
-          The package used for the yubikey-agent daemon.
+          The package used for the yubikey-agent service.
         '';
       };
     };
   };
 
-  config = {
+  config = mkIf cfg.enable {
     environment.systemPackages = [ cfg.package ];
 
     launchd.user.agents.yubikey-agent.serviceConfig = {
       ProgramArguments = [
-        "${pkgs.yubikey-agent}/bin/yubikey-agent"
+        "${cfg.package}/bin/yubikey-agent"
         "-l"
         "/tmp/yubikey-agent.sock"
       ];
-      RunAtLoad = cfg.enable;
+      RunAtLoad = true;
       KeepAlive = true;
     };
 

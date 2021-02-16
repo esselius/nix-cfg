@@ -7,6 +7,7 @@
     google-cloud-sdk
     sbt
     cowsay
+    nodejs
   ];
 
   programs = {
