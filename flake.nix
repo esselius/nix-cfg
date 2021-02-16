@@ -39,8 +39,7 @@
             darwinConfig = username: darwin.lib.darwinSystem {
               modules = [
                 ./darwin-configuration.nix
-                ./modules/yubikey-agent.nix
-                ./modules/dns-heaven.nix
+                ./modules
                 home.darwinModules.home-manager
                 {
                   home-manager.backupFileExtension = "backup";
