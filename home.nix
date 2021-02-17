@@ -71,6 +71,20 @@
       settings = {
         openstack.disabled = true;
         gcloud.disabled = true;
+        vagrant.disabled = true;
+        git_status.disabled = true;
+        kubernetes = {
+          disabled = false;
+          context_aliases = {
+            gke_pagero-cluster-api_europe-north1_cluster-api = "gke-cluster-api";
+            gke_pagero-build_europe-north1_build-regional    = "gke-build";
+            gke_pagero-prod_europe-north1_production         = "gke-prod";
+            gke_pagero-staging_europe-north1_staging         = "gke-staging";
+            gke_pagero-test_europe-north1_test               = "gke-test";
+            "prod-1-cluster-1-admin@prod-1-cluster-1"        = "nrd-prod-1";
+            "staging-1-cluster-1-admin@staging-1-cluster-1"  = "nrd-staging-1";
+          };
+        };
       };
     };
   };
