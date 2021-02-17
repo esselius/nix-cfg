@@ -8,44 +8,28 @@
     home.url = "github:nix-community/home-manager";
     flake-utils.url = "github:numtide/flake-utils";
 
-    dns-heaven.url = "github:jduepmeier/dns-heaven?ref=v1.1.0";
-    dns-heaven.flake = false;
+    nix-library.url = "github:esselius/nix-library";
   };
 
-  outputs = { self, nixpkgs, darwin, home, flake-utils, ... }@inputs:
+  outputs = { self, nixpkgs, darwin, home, flake-utils, nix-library, ... }@inputs:
     let
       systems = [ "x86_64-linux" "x86_64-darwin" ];
       flake = flake-utils.lib.eachSystem systems
         (system:
           let
-            overlay = final: prev:
-              let
-                pkg = name: input: prev.callPackage (./pkgs + "/${name}.nix") { src = input; };
-                deNix = filename: prev.lib.removeSuffix ".nix" filename;
-              in
-              prev.lib.mapAttrs'
-                (filename: _: prev.lib.nameValuePair
-                  (deNix filename)
-                  (pkg (deNix filename) inputs.${deNix filename}))
-                (builtins.readDir ./pkgs);
-
             pkgs = import nixpkgs {
               inherit system;
-              overlays = [ overlay ];
+              overlays = [ nix-library.overlay ];
             };
 
-            scripts = import ./lib/scripts.nix { inherit pkgs darwin; flake = self; };
 
             darwinConfig = username: darwin.lib.darwinSystem {
               modules = [
                 ./darwin-configuration.nix
-                ./modules
                 home.darwinModules.home-manager
+                nix-library.darwinModules.all
+                nix-library.homeModules.all
                 {
-                  home-manager.backupFileExtension = "backup";
-                  home-manager.useGlobalPkgs = true;
-                  home-manager.useUserPackages = true;
-
                   home-manager.users.${username} = import ./home.nix;
 
                   services.yubikey-agent.enable = true;
@@ -63,11 +47,8 @@
               modules = [
                 ./configuration.nix
                 home.nixosModules.home-manager
+                nix-library.homeModules.settings
                 {
-                  home-manager.backupFileExtension = "backup";
-                  home-manager.useGlobalPkgs = true;
-                  home-manager.useUserPackages = true;
-
                   home-manager.users.${username} = import ./home.nix;
                 }
               ];
@@ -94,15 +75,7 @@
               vagrant = homeManagerConfig "vagrant";
             };
 
-            apps = scripts;
-
-            devShell = pkgs.mkShell {
-              buildInputs = with scripts; [
-                switchNixOS
-                switchDarwin
-                switchHome
-              ];
-            };
+            apps = nix-library.lib.scripts self;
           }
         );
     in

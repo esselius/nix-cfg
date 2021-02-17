@@ -1,15 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  nix = {
-    package = pkgs.nixFlakes;
-    extraOptions = "experimental-features = nix-command flakes";
-    trustedUsers = [ "root" "@admin" ];
-  };
-
   services = {
-    nix-daemon.enable = true;
-
     yabai = {
       enable = true;
       package = pkgs.yabai;
@@ -61,19 +53,6 @@
 
         # open terminal
         alt - return         : open -a kitty
-      '';
-    };
-  };
-
-  programs = {
-    zsh.enable = true;
-    fish = {
-      enable = true;
-      useBabelfish = true;
-      babelfishPackage = pkgs.babelfish;
-
-      shellInit = ''
-        source /etc/fish/nixos-env-preinit.fish
       '';
     };
   };
