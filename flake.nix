@@ -73,12 +73,9 @@
               ];
             };
 
-
-            homeDirPrefix = pkgs: "/home";
-
             homeManagerConfig = username: home.lib.homeManagerConfiguration {
               inherit username system pkgs;
-              homeDirectory = homeDirPrefix pkgs;
+              homeDirectory = "/home";
               configuration = import ./home.nix;
             };
           in
