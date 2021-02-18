@@ -8,6 +8,7 @@
     sbt
     cowsay
     nodejs
+    nixos-generators
   ];
 
   programs = {

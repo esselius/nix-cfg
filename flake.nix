@@ -3,42 +3,54 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs";
+
     darwin.url = "github:lnl7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home.url = "github:nix-community/home-manager";
+    home.inputs.nixpkgs.follows = "nixpkgs";
+
     flake-utils.url = "github:numtide/flake-utils";
 
-    nix-library.url = "github:esselius/nix-library";
+    dns-heaven.url = "github:jduepmeier/dns-heaven?ref=v1.1.0";
+    dns-heaven.flake = false;
   };
 
-  outputs = { self, nixpkgs, darwin, home, flake-utils, nix-library, ... }@inputs:
+  outputs = { self, nixpkgs, darwin, home, flake-utils, ... }@inputs:
     let
+      library = import ./library inputs;
+
       systems = [ "x86_64-linux" "x86_64-darwin" ];
+
       flake = flake-utils.lib.eachSystem systems
         (system:
           let
             pkgs = import nixpkgs {
               inherit system;
-              overlays = [ nix-library.overlay ];
+              overlays = with library.overlays; [
+                packages
+                switchScripts
+              ];
             };
-
 
             darwinConfig = username: darwin.lib.darwinSystem {
               modules = [
-              ./darwin-configuration.nix
-              home.darwinModules.home-manager
-              nix-library.darwinModules.all
-              nix-library.homeModules.all
-              {
-                home-manager.users.${username} = import ./home.nix;
+                home.darwinModules.home-manager
 
-                services.yubikey-agent.enable = true;
-                services.yubikey-agent.package = pkgs.yubikey-agent;
+                library.darwinModules.all
+                library.homeModules.all
 
-                services.dns-heaven.enable = true;
-                services.dns-heaven.package = pkgs.dns-heaven;
-              }
-            ];
+                ./darwin-configuration.nix
+
+                {
+                  home-manager.users.${username} = import ./home.nix;
+
+                  services.yubikey-agent.enable = true;
+                  services.yubikey-agent.package = pkgs.yubikey-agent;
+
+                  services.dns-heaven.enable = true;
+                  services.dns-heaven.package = pkgs.dns-heaven;
+                }
+              ];
             };
 
             nixosConfig = username: nixpkgs.lib.nixosSystem {
@@ -47,7 +59,7 @@
               modules = [
                 ./configuration.nix
                 home.nixosModules.home-manager
-                nix-library.homeModules.all
+                library.homeModules.all
                 {
                   home-manager.users.${username} = import ./home.nix;
                 }
@@ -75,11 +87,11 @@
               vagrant = homeManagerConfig "vagrant";
             };
 
-            apps = nix-library.lib.scripts self;
+            apps = pkgs.switchScripts self;
           }
         );
     in
-    flake // {
+    library // flake // {
       darwinConfigurations = flake.darwinConfigurations.x86_64-darwin;
       homeManagerConfigurations = flake.homeManagerConfigurations.x86_64-linux;
       nixosConfigurations = flake.nixosConfigurations.x86_64-linux;
