@@ -25,20 +25,20 @@
 
             darwinConfig = username: darwin.lib.darwinSystem {
               modules = [
-                ./darwin-configuration.nix
-                home.darwinModules.home-manager
-                nix-library.darwinModules.all
-                nix-library.homeModules.all
-                {
-                  home-manager.users.${username} = import ./home.nix;
+              ./darwin-configuration.nix
+              home.darwinModules.home-manager
+              nix-library.darwinModules.all
+              nix-library.homeModules.all
+              {
+                home-manager.users.${username} = import ./home.nix;
 
-                  services.yubikey-agent.enable = true;
-                  services.yubikey-agent.package = pkgs.yubikey-agent;
+                services.yubikey-agent.enable = true;
+                services.yubikey-agent.package = pkgs.yubikey-agent;
 
-                  services.dns-heaven.enable = true;
-                  services.dns-heaven.package = pkgs.dns-heaven;
-                }
-              ];
+                services.dns-heaven.enable = true;
+                services.dns-heaven.package = pkgs.dns-heaven;
+              }
+            ];
             };
 
             nixosConfig = username: nixpkgs.lib.nixosSystem {
@@ -47,7 +47,7 @@
               modules = [
                 ./configuration.nix
                 home.nixosModules.home-manager
-                nix-library.homeModules.settings
+                nix-library.homeModules.all
                 {
                   home-manager.users.${username} = import ./home.nix;
                 }

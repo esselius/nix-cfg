@@ -24,12 +24,6 @@
   system.stateVersion = "20.09";
 
   services.sshd.enable = true;
-  nix = {
-    package = pkgs.nixUnstable;
-    extraOptions = ''
-      experimental-features = nix-command flakes ca-references
-    '';
-  };
 
   programs = {
     sysdig.enable = true;

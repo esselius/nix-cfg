@@ -11,8 +11,6 @@
   ];
 
   programs = {
-    home-manager.enable = true;
-
     direnv = {
       enable = true;
       enableNixDirenvIntegration = true;

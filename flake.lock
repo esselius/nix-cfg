@@ -113,11 +113,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1613577774,
-        "narHash": "sha256-yQS1uRMoIfp2dJVV5bqQvlWhdZlS/CyutJCcJ8ovoe8=",
+        "lastModified": 1613648290,
+        "narHash": "sha256-XklyQukE7PPvmU2swVsr3lzHoAPpE0wWV76l+ACz23Q=",
         "owner": "esselius",
         "repo": "nix-library",
-        "rev": "c812046775f0dc9bd6d25b49028ba8beeb723e9c",
+        "rev": "694ffe781a73e233f69ad1340b047e5ca4abc9db",
         "type": "github"
       },
       "original": {
