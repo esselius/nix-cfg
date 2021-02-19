@@ -9,9 +9,10 @@ let
           inherit system;
           overlays = with library.overlays; [
             packages
-            switchScripts
           ];
         };
+
+        switchScripts = pkgs.callPackage ./lib/switchScripts.nix { inherit darwin; };
 
         darwinConfig = username: darwin.lib.darwinSystem {
           modules = [
@@ -20,10 +21,10 @@ let
             library.darwinModules.all
             library.homeModules.all
 
-            ./darwin-configuration.nix
+            ./darwin/darwin-configuration.nix
 
             {
-              home-manager.users.${username} = import ./home.nix;
+              home-manager.users.${username} = import ./home/home.nix;
 
               services.yubikey-agent.enable = true;
               services.yubikey-agent.package = pkgs.yubikey-agent;
@@ -38,11 +39,11 @@ let
           inherit system;
 
           modules = [
-            ./configuration.nix
+            ./nixos/configuration.nix
             home.nixosModules.home-manager
             library.homeModules.all
             {
-              home-manager.users.${username} = import ./home.nix;
+              home-manager.users.${username} = import ./home/home.nix;
             }
           ];
         };
@@ -50,10 +51,14 @@ let
         homeManagerConfig = username: home.lib.homeManagerConfiguration {
           inherit username system pkgs;
           homeDirectory = "/home";
-          configuration = import ./home.nix;
+          configuration = import ./home/home.nix;
         };
       in
       {
+        lib = {
+          inherit switchScripts;
+        };
+
         nixosConfigurations = {
           nixos = nixosConfig "peteresselius";
         };
@@ -68,7 +73,7 @@ let
           vagrant = homeManagerConfig "vagrant";
         };
 
-        apps = pkgs.switchScripts self;
+        apps = switchScripts self;
       }
     );
 in

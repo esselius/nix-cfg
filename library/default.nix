@@ -17,9 +17,6 @@ let
 in
 {
   overlays = {
-    switchScripts = (final: prev: {
-      switchScripts = prev.callPackage ./switchScripts.nix { inherit darwin; };
-    });
     packages = (final: prev: {
       dns-heaven = prev.callPackage ./pkgs/dns-heaven.nix { src = dns-heaven; };
     });
