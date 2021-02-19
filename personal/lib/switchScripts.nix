@@ -1,4 +1,4 @@
-{ lib, writeShellScriptBin, darwin }:
+{ pkgs, lib, writeShellScriptBin, darwin }:
 
 with builtins;
 let
@@ -6,10 +6,12 @@ let
     modules = [ ({ pkgs, ... }: { nix.package = pkgs.nixFlakes; }) ];
   };
   darwinRebuild = "${rawDarwinSystem.system}/sw/bin/darwin-rebuild";
+
+  nixosRebuild = "${pkgs.nixos-rebuild.override { nix = pkgs.nixUnstable; }}/bin/nixos-rebuild";
 in
 flakePath: {
   switchNixOS = writeShellScriptBin "switch-nixos" ''
-    nixos-rebuild switch --flake ${flakePath} "$@"
+    ${nixosRebuild} switch --flake ${flakePath} "$@"
   '';
 
   switchDarwin = writeShellScriptBin "switch-darwin" ''
@@ -51,7 +53,6 @@ flakePath: {
       sleep 1
     fi
 
-    export PATH=${lib.makeBinPath [ gitMinimal jq nixUnstable ]}
     usr="''${1:-$USER}"
 
     1>&2 echo "Building configuration..."

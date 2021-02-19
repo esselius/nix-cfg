@@ -25,25 +25,14 @@ let
 
             {
               home-manager.users.${username} = import ./home/home.nix;
+            }
 
+            {
               services.yubikey-agent.enable = true;
               services.yubikey-agent.package = pkgs.yubikey-agent;
 
               services.dns-heaven.enable = true;
               services.dns-heaven.package = pkgs.dns-heaven;
-            }
-          ];
-        };
-
-        nixosConfig = username: nixpkgs.lib.nixosSystem {
-          inherit system;
-
-          modules = [
-            ./nixos/configuration.nix
-            home.nixosModules.home-manager
-            library.homeModules.all
-            {
-              home-manager.users.${username} = import ./home/home.nix;
             }
           ];
         };
@@ -59,10 +48,6 @@ let
           inherit switchScripts;
         };
 
-        nixosConfigurations = {
-          nixos = nixosConfig "peteresselius";
-        };
-
         darwinConfigurations = {
           Pepps-MacBook-Pro = darwinConfig "peteresselius";
           Vagrants-MacBook-Pro = darwinConfig "vagrant";
@@ -74,11 +59,18 @@ let
         };
 
         apps = switchScripts self;
+
+        devShell = pkgs.mkShell {
+          buildInputs = with (switchScripts self); [
+            switchNixOS
+            switchDarwin
+            switchHome
+          ];
+        };
       }
     );
 in
 flake // {
   darwinConfigurations = flake.darwinConfigurations.x86_64-darwin;
   homeManagerConfigurations = flake.homeManagerConfigurations.x86_64-linux;
-  nixosConfigurations = flake.nixosConfigurations.x86_64-linux;
 }
