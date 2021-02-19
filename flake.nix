@@ -17,7 +17,7 @@
 
   outputs = inputs:
     let
-      library  = import ./library inputs;
+      library  = import ./library  inputs;
       personal = import ./personal (inputs // { inherit library; });
     in
     library // personal;
