@@ -62,6 +62,7 @@ let
 
         devShell = pkgs.mkShell {
           buildInputs = with (switchScripts self); [
+            pkgs.gitMinimal
             switchNixOS
             switchDarwin
             switchHome
