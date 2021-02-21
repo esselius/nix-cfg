@@ -2,5 +2,5 @@
 writeScriptBin "vpn" ''
 #!${stdenv.shell}
 
-${src}/viscosity.sh "$@"
+${src}/viscosity.sh connect all
 ''
