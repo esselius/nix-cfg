@@ -9,6 +9,7 @@
     cowsay
     nodejs
     vagrant
+    viscosity-sh
   ];
 
   programs = {

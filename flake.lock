@@ -23,17 +23,17 @@
     "dns-heaven": {
       "flake": false,
       "locked": {
-        "lastModified": 1592378049,
-        "narHash": "sha256-LwIugG9nbj2CtlyftG7SbTk3+M3mweg1rCH8wcnRvoA=",
+        "lastModified": 1592461594,
+        "narHash": "sha256-b8oWS9nnoksvAfQMJFXTKqxIGJhIa/Fgtqz3btEBhPQ=",
         "owner": "jduepmeier",
         "repo": "dns-heaven",
-        "rev": "4089ea06243517a8e7bdcfbcbafc724995b13bd1",
+        "rev": "3a38e6cb0430753b579490b8bd4652e3fda5fc5d",
         "type": "github"
       },
       "original": {
         "owner": "jduepmeier",
-        "ref": "v1.1.0",
         "repo": "dns-heaven",
+        "rev": "3a38e6cb0430753b579490b8bd4652e3fda5fc5d",
         "type": "github"
       }
     },
@@ -95,7 +95,25 @@
         "dns-heaven": "dns-heaven",
         "flake-utils": "flake-utils",
         "home": "home",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "viscosity-sh": "viscosity-sh"
+      }
+    },
+    "viscosity-sh": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1455182068,
+        "narHash": "sha256-YDjSluk7Ceonnb7WU+GMUX9xdEEV7+u85y0rCZnboMc=",
+        "owner": "andreax79",
+        "repo": "viscosity.sh",
+        "rev": "407385f43f0c5d149af4eafa9f6ae09e7895288d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "andreax79",
+        "repo": "viscosity.sh",
+        "rev": "407385f43f0c5d149af4eafa9f6ae09e7895288d",
+        "type": "github"
       }
     }
   },

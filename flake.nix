@@ -10,8 +10,10 @@
     home.url = "github:nix-community/home-manager?rev=da923602089501142855bbb3c276fbc36513eefb";
     home.inputs.nixpkgs.follows = "nixpkgs";
 
-    dns-heaven.url = "github:jduepmeier/dns-heaven?ref=v1.1.0";
+    dns-heaven.url = "github:jduepmeier/dns-heaven?rev=3a38e6cb0430753b579490b8bd4652e3fda5fc5d";
     dns-heaven.flake = false;
+    viscosity-sh.url = "github:andreax79/viscosity.sh?rev=407385f43f0c5d149af4eafa9f6ae09e7895288d";
+    viscosity-sh.flake = false;
   };
 
   outputs = inputs:

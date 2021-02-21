@@ -16,6 +16,13 @@ let
 
         darwinConfig = username: darwin.lib.darwinSystem {
           modules = [
+            {
+              nixpkgs = {
+                overlays = [
+                  self.overlays.packages
+                ];
+              };
+            }
             home.darwinModules.home-manager
 
             library.darwinModules.all

@@ -1,4 +1,4 @@
-{ nixpkgs, darwin, dns-heaven, ... }:
+{ nixpkgs, darwin, dns-heaven, viscosity-sh, ... }:
 let
   inherit (nixpkgs) lib;
 
@@ -19,6 +19,7 @@ in
   overlays = {
     packages = (final: prev: {
       dns-heaven = prev.callPackage ./pkgs/dns-heaven.nix { src = dns-heaven; };
+      viscosity-sh = prev.callPackage ./pkgs/viscosity-sh.nix { src = viscosity-sh; };
     });
   };
 
