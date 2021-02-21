@@ -2,12 +2,12 @@
   description = "Nix Config of Pepp";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-20.09-darwin";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
 
     darwin.url = "github:lnl7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
-    home.url = "github:nix-community/home-manager";
+    home.url = "github:nix-community/home-manager?rev=da923602089501142855bbb3c276fbc36513eefb";
     home.inputs.nixpkgs.follows = "nixpkgs";
 
     dns-heaven.url = "github:jduepmeier/dns-heaven?ref=v1.1.0";

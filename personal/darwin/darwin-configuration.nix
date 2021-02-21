@@ -8,20 +8,22 @@
       enableScriptingAddition = false;
 
       config = {
-        layout                = "bsp";
+        layout = "bsp";
 
-        top_padding           = "10";
-        bottom_padding        = "10";
-        left_padding          = "10";
-        right_padding         = "10";
-        window_gap            = "10";
+        top_padding = "10";
+        bottom_padding = "10";
+        left_padding = "10";
+        right_padding = "10";
+        window_gap = "10";
 
-        auto_balance          = "on";
-        focus_follows_mouse   = "autofocus";
+        auto_balance = "on";
+        focus_follows_mouse = "autofocus";
 
-        mouse_modifier        = "alt";
-        mouse_action1         = "resize";
-        mouse_drop_action     = "swap";
+        mouse_modifier = "alt";
+        mouse_action1 = "resize";
+        mouse_drop_action = "swap";
+
+        external_bar = "all:26:0";
       };
 
       extraConfig = ''
@@ -30,6 +32,17 @@
         yabai -m rule --add app="^Viscosity$" manage=off
         yabai -m rule --add app="^Intel Power Gadget$" manage=off
       '';
+    };
+
+    spacebar = {
+      enable = true;
+      package = pkgs.spacebar;
+      config = {
+        position = "top";
+        height = 26;
+        text_font = ''"Fira Code:Retina:15"'';
+        clock_format = ''"%R %y-%m-%d"'';
+      };
     };
 
     skhd = {
@@ -55,6 +68,13 @@
         alt - return         : open -a kitty
       '';
     };
+  };
+
+  fonts = {
+    enableFontDir = true;
+    fonts = [
+      pkgs.fira-code
+    ];
   };
 
   system.defaults = {
