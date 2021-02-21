@@ -8,7 +8,7 @@
     sbt
     cowsay
     nodejs
-    nixos-generators
+    vagrant
   ];
 
   programs = {
