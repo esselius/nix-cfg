@@ -2,7 +2,7 @@
   description = "Nix Config of Pepp";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-20.09-darwin";
     flake-utils.url = "github:numtide/flake-utils";
 
     darwin.url = "github:lnl7/nix-darwin";
@@ -18,7 +18,7 @@
     let
       library  = import ./library  inputs;
       vagrant  = import ./vagrant  (inputs // { inherit library; });
-      personal = import ./personal (inputs // { inherit library; });
+      personal = import ./personal (inputs // { inherit library vagrant; });
     in
     library // vagrant // personal;
 }
