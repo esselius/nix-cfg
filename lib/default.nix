@@ -1,9 +1,13 @@
-{ self, nixpkgs, darwin, flake-utils, ... }:
+{ self, nixpkgs, darwin, flake-utils, ... }@inputs:
 with builtins;
 let
   inherit (nixpkgs) lib;
+
+  overlays = (import ../overlays { inherit inputs; }).nixpkgs.overlays;
 in
 {
+  inherit overlays;
+
   importModulesDir = dir:
     lib.fold lib.recursiveUpdate { } (map
       (path:
@@ -20,7 +24,7 @@ in
   switchers = flake-utils.lib.eachDefaultSystem (system:
     let
       pkgs = import nixpkgs {
-        inherit system;
+        inherit system overlays;
       };
 
       inherit (pkgs) writeShellScriptBin;
