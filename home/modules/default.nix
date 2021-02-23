@@ -1,8 +1,8 @@
 [
-    ./home
+  ./home
 
-    ./shells/fish.nix
-    ./terminals/kitty.nix
+  ./shells/fish.nix
+  ./terminals/kitty.nix
 
-    ../../overlays
+  ../../overlays
 ]
