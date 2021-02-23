@@ -2,13 +2,6 @@
 with builtins;
 let
   inherit (nixpkgs) lib;
-
-  rawDarwinSystem = darwin.lib.darwinSystem {
-    modules = [ ({ pkgs, ... }: { nix.package = pkgs.nixFlakes; }) ];
-  };
-  darwinRebuild = "${rawDarwinSystem.system}/sw/bin/darwin-rebuild";
-
-  nixosRebuild = "${pkgs.nixos-rebuild.override { nix = pkgs.nixUnstable; }}/bin/nixos-rebuild";
 in
 {
   importModulesDir = dir:
@@ -24,54 +17,76 @@ in
           (import path))
       (lib.filesystem.listFilesRecursive dir));
 
-  switchScripts = system:
-  let
-    pkgs = import nixpkgs {
-      inherit system;
-    };
+  switchers = flake-utils.lib.eachDefaultSystem (system:
+    let
+      pkgs = import nixpkgs {
+        inherit system;
+      };
 
-    inherit (pkgs) writeShellScriptBin;
-  in
-  {
-    switchNixOS = writeShellScriptBin "switch-nixos" ''
-      ${nixosRebuild} switch --flake ${self} "$@"
-    '';
+      inherit (pkgs) writeShellScriptBin;
 
-    switchDarwin = writeShellScriptBin "switch-darwin" ''
-      set -euo pipefail
+      rawDarwinSystem = darwin.lib.darwinSystem {
+        modules = [ ({ pkgs, ... }: { nix.package = pkgs.nixFlakes; }) ];
+      };
+      darwinRebuild = "${rawDarwinSystem.system}/sw/bin/darwin-rebuild";
 
-      if ! [[ -d /run ]]; then
-          if ! grep -q run /etc/synthetic.conf; then
-              echo -e 'run\tprivate/var/run' | sudo tee -a /etc/synthetic.conf
+      nixosRebuild = "${pkgs.nixos-rebuild.override { nix = pkgs.nixUnstable; }}/bin/nixos-rebuild";
+
+      switchScripts = {
+        switchNixOS = writeShellScriptBin "switch-nixos" ''
+          ${nixosRebuild} switch --flake ${self} "$@"
+        '';
+
+        switchDarwin = writeShellScriptBin "switch-darwin" ''
+          set -euo pipefail
+
+          if ! [[ -d /run ]]; then
+              if ! grep -q run /etc/synthetic.conf; then
+                  echo -e 'run\tprivate/var/run' | sudo tee -a /etc/synthetic.conf
+              fi
+
+              util=/System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util
+
+              # Big Sur switched to `-t`
+              if ($util -h || true) | grep -q '\-B'; then
+                  $util -B
+              else
+                  $util -t
+              fi
           fi
 
-          util=/System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util
+          unlinkResult() {
+              if [[ -L result ]]; then
+                  unlink result
+              fi
+          }
 
-          # Big Sur switched to `-t`
-          if ($util -h || true) | grep -q '\-B'; then
-              $util -B
-          else
-              $util -t
-          fi
-      fi
+          trap unlinkResult EXIT
 
-      unlinkResult() {
-          if [[ -L result ]]; then
-              unlink result
-          fi
-      }
+          ${darwinRebuild} switch --flake ${self} "$@"
+        '';
 
-      trap unlinkResult EXIT
+        switchHome = writeShellScriptBin "switch-home" ''
+          set -euo pipefail
 
-      ${darwinRebuild} switch --flake ${self} "$@"
-    '';
+          out="$(nix build --json ".#homeManagerConfigurations.$USER.activationPackage" | jq -r .[].outputs.out)"
 
-    switchHome = writeShellScriptBin "switch-home" ''
-      set -euo pipefail
+          "$out"/activate
+        '';
+      };
+    in
+    {
+      apps = switchScripts;
 
-      out="$(nix build --json ".#homeManagerConfigurations.$USER.activationPackage" | jq -r .[].outputs.out)"
+      devShell = pkgs.mkShell {
+        buildInputs = with pkgs; with switchScripts; [
+          gitMinimal
 
-      "$out"/activate
-    '';
-  };
+          switchDarwin
+          switchHome
+          switchNixOS
+        ];
+      };
+    }
+  );
 }

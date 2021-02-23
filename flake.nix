@@ -22,6 +22,8 @@
     in
     with lib;
     {
+      inherit (switchers) apps devShell;
+
       darwinModules = importModulesDir ./darwin/modules;
       darwinConfigurations = import ./darwin/configurations inputs;
 
@@ -30,11 +32,5 @@
 
       nixosModules = importModulesDir ./nixos/modules;
       nixosConfigurations = import ./nixos/configurations inputs;
-    }
-    //
-    flake-utils.lib.eachDefaultSystem (system:
-      {
-        apps = switchScripts system;
-      }
-    );
+    };
 }
