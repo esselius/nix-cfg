@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 let
@@ -18,7 +18,7 @@ in
 
       package = mkOption {
         type = types.package;
-        default = null;
+        default = pkgs.yubikey-agent;
         defaultText = "pkgs.yubikey-agent";
         description = ''
           The package used for the yubikey-agent service.

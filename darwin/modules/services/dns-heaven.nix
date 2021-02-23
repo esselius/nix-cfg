@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 let
@@ -17,7 +17,7 @@ in
 
       package = mkOption {
         type = types.package;
-        default = null;
+        default = pkgs.dns-heaven;
         defaultText = "pkgs.dns-heaven";
         description = ''
           The package used for the dns-heaven service.

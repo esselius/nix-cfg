@@ -7,7 +7,7 @@
 
     darwin.url = "github:lnl7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
-    home.url = "github:nix-community/home-manager?rev=da923602089501142855bbb3c276fbc36513eefb";
+    home.url = "github:nix-community/home-manager";
     home.inputs.nixpkgs.follows = "nixpkgs";
 
     dns-heaven.url = "github:jduepmeier/dns-heaven?rev=3a38e6cb0430753b579490b8bd4652e3fda5fc5d";
@@ -16,11 +16,25 @@
     viscosity-sh.flake = false;
   };
 
-  outputs = inputs:
+  outputs = { flake-utils, ... }@inputs:
     let
-      library  = import ./library  inputs;
-      vagrant  = import ./vagrant  (inputs // { inherit library; });
-      personal = import ./personal (inputs // { inherit library vagrant; });
+      lib = import ./lib inputs;
     in
-    library // vagrant // personal;
+    with lib;
+    {
+      darwinModules = importModulesDir ./darwin/modules;
+      darwinConfigurations = import ./darwin/configurations inputs;
+
+      homeModules = importModulesDir ./home/modules;
+      homeManagerConfigurations = import ./home/configurations inputs;
+
+      nixosModules = importModulesDir ./nixos/modules;
+      nixosConfigurations = import ./nixos/configurations inputs;
+    }
+    //
+    flake-utils.lib.eachDefaultSystem (system:
+      {
+        apps = switchScripts system;
+      }
+    );
 }
