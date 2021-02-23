@@ -16,7 +16,7 @@
     viscosity-sh.flake = false;
   };
 
-  outputs = { flake-utils, ... }@inputs:
+  outputs = inputs:
     let
       lib = import ./lib inputs;
     in
