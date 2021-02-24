@@ -22,6 +22,18 @@
         rg = "rg -S --hidden --glob '!.git/*'";
       };
 
+      functions = {
+        gwi-test = {
+          argumentNames = [
+            "namespace"
+            "serviceaccount"
+          ];
+          body = ''
+            kubectl run --rm -it --image google/cloud-sdk:slim --namespace $namespace --serviceaccount $serviceaccount gwi-test -- gcloud auth list
+          '';
+        };
+      };
+
       shellInit = ''
         source /etc/fish/config.fish
 
