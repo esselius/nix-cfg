@@ -28,6 +28,7 @@ in
       };
 
       inherit (pkgs) writeShellScriptBin;
+      inherit (pkgs.lib) makeBinPath;
 
       rawDarwinSystem = darwin.lib.darwinSystem {
         modules = [ ({ pkgs, ... }: { nix.package = pkgs.nixFlakes; }) ];
@@ -43,6 +44,8 @@ in
 
         switchDarwin = writeShellScriptBin "switch-darwin" ''
           set -euo pipefail
+
+          export TERM="''${TERM/xterm-kitty/xterm-256color}"
 
           if ! [[ -d /run ]]; then
               if ! grep -q run /etc/synthetic.conf; then
@@ -73,7 +76,11 @@ in
         switchHome = writeShellScriptBin "switch-home" ''
           set -euo pipefail
 
-          out="$(nix build --json ".#homeManagerConfigurations.$USER.activationPackage" | jq -r .[].outputs.out)"
+          export TERM="''${TERM/xterm-kitty/xterm-256color}"
+
+          export PATH=${makeBinPath [ pkgs.nixUnstable pkgs.git pkgs.jq]}
+
+          out="$(nix --experimental-features 'nix-command flakes' build --json ".#homeManagerConfigurations.$USER.activationPackage" | jq -r .[].outputs.out)"
 
           "$out"/activate
         '';
@@ -85,6 +92,7 @@ in
       devShell = pkgs.mkShell {
         buildInputs = with pkgs; with switchScripts; [
           gitMinimal
+          jq
 
           switchDarwin
           switchHome

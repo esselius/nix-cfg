@@ -6,12 +6,12 @@
 
 ```shell
 # Ubuntu
-$ sh <(curl -L https://nixos.org/nix/install) --daemon
+$ sh <(curl -L https://nixos.org/nix/install) --daemon --nix-extra-conf-file nix.conf
 ```
 
 ```shell
 # Darwin
-$ sh <(curl -L https://nixos.org/nix/install) --daemon --darwin-use-unencrypted-nix-store-volume
+$ sh <(curl -L https://nixos.org/nix/install) --daemon --nix-extra-conf-file nix.conf --darwin-use-unencrypted-nix-store-volume
 ```
 
 ### Bootstrap System

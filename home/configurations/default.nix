@@ -19,4 +19,16 @@ in
       ];
     };
   };
+
+  vagrant = hmConfig {
+    username = "vagrant";
+    homeDirectory = "/home/vagrant";
+    system = "x86_64-linux";
+
+    configuration = {
+      imports = [
+        ./peteresselius
+      ];
+    };
+  };
 }
