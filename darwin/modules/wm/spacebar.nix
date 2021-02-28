@@ -8,7 +8,6 @@
         position = "top";
         height = 26;
         text_font = ''"Fira Code:Retina:15"'';
-        clock_format = ''"%R %y-%m-%d"'';
       };
     };
 
