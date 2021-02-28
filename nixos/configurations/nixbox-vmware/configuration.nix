@@ -2,6 +2,7 @@
 
 {
   imports =
+    (import ../../modules) ++
     [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
@@ -41,6 +42,9 @@
     nfs-utils
     rsync
   ];
+
+  programs.fish.enable = true;
+  users.defaultUserShell = pkgs.fish;
 
   users.users.root = { password = "vagrant"; };
   # Creates a "vagrant" group & user with password-less sudo access

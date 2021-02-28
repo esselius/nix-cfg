@@ -1,10 +1,13 @@
 Vagrant.configure("2") do |config|
     config.vagrant.plugins = ["vagrant-vmware-desktop"]
+
     config.vm.provider :vmware_desktop do |vmware|
       vmware.vmx["memsize"] = "8192"
       vmware.ssh_info_public = true
+      vmware.gui = true
     end
 
+    # NixOS
     config.vm.define :nixos, primary: true do |nixos|
       nixos.vm.box = "esselius/nixos"
       nixos.vm.box_version = "20.09"
@@ -15,6 +18,7 @@ Vagrant.configure("2") do |config|
         inline: "cd nix-cfg && sudo nix-shell --command switch-nixos"
     end
 
+    # Ubuntu
     config.vm.define :ubuntu, autostart: false do |ubuntu|
       ubuntu.vm.box = "generic/ubuntu2004"
       ubuntu.vm.box_version = "3.2.6"
@@ -28,6 +32,7 @@ Vagrant.configure("2") do |config|
         inline: "cd /vagrant && nix-shell --command switch-home"
     end
 
+    # MacOS
     config.vm.define :catalina, autostart: false do |catalina|
         catalina.vm.box = "tas50/macos_10.15"
         catalina.vm.box_version = "1.1.0"
@@ -37,7 +42,7 @@ Vagrant.configure("2") do |config|
         catalina.vm.provision :shell, privileged: false,
           inline: "sh <(curl -sSfL https://nixos.org/nix/install) --daemon --darwin-use-unencrypted-nix-store-volume"
 
-        # Not required if logged in
+        # Not required if logged in to UI
         catalina.vm.provision :shell, privileged: false, inline:
           "zsh -i -c 'nix-env -iA nixpkgs.gitMinimal'"
 

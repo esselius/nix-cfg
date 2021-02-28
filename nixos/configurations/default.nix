@@ -3,15 +3,7 @@
   nixbox = nixpkgs.lib.makeOverridable nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";
     modules = [
-      ./nixos/configuration.nix
-
-      {
-        users.users.peteresselius = {
-          home = "/home/peteresselius";
-          isNormalUser = true;
-          extraGroups = ["wheel"];
-        };
-      }
+      ./nixbox-vmware/configuration.nix
 
       {
         imports = [ home.nixosModules.home-manager ];
@@ -22,7 +14,7 @@
 
         home-manager.extraSpecialArgs = { inherit inputs; };
 
-        home-manager.users.peteresselius = import ../../home/configurations/peteresselius;
+        home-manager.users.vagrant = import ../../home/configurations/peteresselius;
       }
     ];
   };
