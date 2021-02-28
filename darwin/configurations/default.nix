@@ -36,10 +36,25 @@
 
           home-manager.users.peteresselius = import ../../home/configurations/peteresselius;
         }
+
+        {
+          homebrew = {
+            enable = true;
+
+            taps = [
+              "esselius/personal"
+            ];
+
+            casks = [
+              "vagrant"
+              "vagrant-vmware-utility"
+            ];
+          };
+        }
       ];
     };
 
-  Vagrants-MacBook-Pro = darwin.lib.darwinSystem
+  Vagrants-Mac = darwin.lib.darwinSystem
     {
       inherit inputs;
       modules = [

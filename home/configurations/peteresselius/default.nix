@@ -14,7 +14,6 @@
     sbt
     cowsay
     nodejs
-    vagrant
     viscosity-sh
     qemu
   ];
