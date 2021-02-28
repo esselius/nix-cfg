@@ -35,15 +35,17 @@ Vagrant.configure("2") do |config|
         catalina.vm.synced_folder ".", "/Users/vagrant/nix-cfg", type: "rsync"
 
         catalina.vm.provision :shell, privileged: false,
-          inline: "sh <(curl -sSfL https://nixos.org/nix/install) --daemon --nix-extra-conf-file nix-cfg/nix.conf --darwin-use-unencrypted-nix-store-volume"
+          inline: "sh <(curl -sSfL https://nixos.org/nix/install) --daemon --darwin-use-unencrypted-nix-store-volume"
 
+        # Not required if logged in
         catalina.vm.provision :shell, privileged: false, inline:
           "zsh -i -c 'nix-env -iA nixpkgs.gitMinimal'"
 
+        # Disable /nix spotlight indexing and drop default nix.conf (recreated by nix-darwin)
         catalina.vm.provision :shell, inline:
-          "mdutil -i off /nix"
+          "mdutil -i off /nix && rm /etc/nix/nix.conf"
 
         catalina.vm.provision :shell, privileged: false, inline:
-          "zsh -i -c 'cd nix-cfg && nix-shell -p git --command \"nix-shell --command switch-darwin --show-trace\"'"
+          "zsh -i -c 'cd nix-cfg && nix-shell --command switch-darwin'"
       end
   end

@@ -62,15 +62,12 @@ in
               fi
           fi
 
-          unlinkResult() {
-              if [[ -L result ]]; then
-                  unlink result
-              fi
-          }
-
-          trap unlinkResult EXIT
+          if [[ -L result ]]; then
+              unlink result
+          fi
 
           ${darwinRebuild} switch --flake ${self} "$@"
+          unlink result
         '';
 
         switchHome = writeShellScriptBin "switch-home" ''
@@ -78,7 +75,7 @@ in
 
           export TERM="''${TERM/xterm-kitty/xterm-256color}"
 
-          export PATH=${makeBinPath [ pkgs.nixUnstable pkgs.git pkgs.jq]}
+          export PATH=${makeBinPath [ pkgs.nixUnstable pkgs.git pkgs.jq ]}
 
           out="$(nix --experimental-features 'nix-command flakes' build --json ".#homeManagerConfigurations.$USER.activationPackage" | jq -r .[].outputs.out)"
 
