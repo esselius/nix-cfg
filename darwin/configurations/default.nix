@@ -41,13 +41,20 @@
           homebrew = {
             enable = true;
 
-            taps = [
-              "esselius/personal"
-            ];
+            # taps = [
+            #   "esselius/personal"
+            # ];
 
             casks = [
+              "vmware-fusion"
               "vagrant"
               "vagrant-vmware-utility"
+              "alfred"
+              "xquartz"
+              "monitorcontrol"
+              "virtualbox"
+              "virtualbox-extension-pack"
+              "1password"
             ];
           };
         }

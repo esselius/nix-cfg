@@ -16,5 +16,18 @@
     nodejs
     viscosity-sh
     qemu
+    ghq
+    sops
+    jq
+    yq
+    fzf
+    socat
+    pv
+    hub
+    ripgrep
+    bfg-repo-cleaner
+    git-lfs
+    vault
+    stern
   ];
 }
