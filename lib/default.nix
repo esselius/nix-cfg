@@ -81,6 +81,17 @@ in
 
           "$out"/activate
         '';
+
+        rebuildNixOSVM = writeShellScriptBin "rebuild-nixos-vm" ''
+          set -e
+          rm -f packer_vmware-iso_vmware.box
+
+          ${pkgs.callPackage vagrantBuildFlake { flake = self; }}/bin/packer-build-vmware-vagrant-box
+
+          vagrant box add --force esselius/nix-cfg-nixos packer_vmware-iso_vmware.box
+          vagrant destroy -f nixos
+          vagrant up nixos
+        '';
       };
     in
     {
@@ -94,6 +105,8 @@ in
           switchDarwin
           switchHome
           switchNixOS
+
+          rebuildNixOSVM
         ];
       };
     }

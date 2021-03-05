@@ -6,7 +6,20 @@
 {
   imports = [ ];
 
-  boot.initrd.availableKernelModules = [ "ata_piix" "mptspi" "sd_mod" "sr_mod" ];
+  boot.initrd.availableKernelModules = [
+    "ata_piix"
+    "mptspi"
+    "sd_mod"
+    "sr_mod"
+    "mptspi"
+    "vmw_balloon"
+    "vmwgfx"
+    "vmw_vmci"
+    "vmw_vsock_vmci_transport"
+    "vmxnet3"
+    "vsock"
+
+  ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];

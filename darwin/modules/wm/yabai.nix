@@ -38,7 +38,9 @@
       _HIHideMenuBar = true;
     };
     finder = {
-      CreateDesktop = false;
+      # Bug: Switching to another display with yabai makes it click everything you hover if having disabled desktop icons:
+      # https://github.com/koekeishiya/yabai/issues/637#issuecomment-772814115
+      CreateDesktop = true;
     };
   };
 }
