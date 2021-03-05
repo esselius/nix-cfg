@@ -1,7 +1,7 @@
-{ self, nixpkgs, darwin, flake-utils, ... }@inputs:
-with builtins;
+{ self, nixpkgs, darwin, flake-utils, flakebox, ... }@inputs:
 let
-  inherit (nixpkgs) lib;
+  inherit (nixpkgs.lib) filter fold recursiveUpdate setAttrByPath pipe removePrefix removeSuffix strings hasSuffix filesystem;
+  inherit (flakebox.lib) vagrantBuildFlake;
 
   overlays = (import ../overlays { inherit inputs; }).nixpkgs.overlays;
 in
@@ -9,17 +9,17 @@ in
   inherit overlays;
 
   importModulesDir = dir:
-    lib.fold lib.recursiveUpdate { } (map
+    fold recursiveUpdate { } (map
       (path:
-        lib.setAttrByPath
-          (lib.pipe path [
+        setAttrByPath
+          (pipe path [
             toString
-            (lib.removePrefix "${toString dir}/")
-            (lib.removeSuffix ".nix")
-            (lib.strings.splitString "/")
+            (removePrefix "${toString dir}/")
+            (removeSuffix ".nix")
+            (strings.splitString "/")
           ])
           (import path))
-      (lib.filesystem.listFilesRecursive dir));
+      (filter (path: ! hasSuffix "default.nix" (toString path)) (filesystem.listFilesRecursive dir)));
 
   switchers = flake-utils.lib.eachDefaultSystem (system:
     let

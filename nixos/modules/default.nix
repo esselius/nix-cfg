@@ -1,3 +1,4 @@
 [
-    ./system/nix.nix
+  ./system/nix.nix
+  ./system/nixpkgs.nix
 ]
