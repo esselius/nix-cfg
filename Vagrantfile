@@ -1,15 +1,14 @@
 Vagrant.configure("2") do |config|
     config.vagrant.plugins = ["vagrant-vmware-desktop"]
 
-    config.ssh.keys_only = true
-
-    config.vm.provider :vmware_desktop do |vmware|
-      vmware.vmx["memsize"] = "8192"
-    end
-
     # NixOS
     config.vm.define :nixos, primary: true do |nixos|
       nixos.vm.box = "esselius/nix-cfg-nixos"
+
+      nixos.vm.provider :vmware_desktop do |vmware|
+        vmware.vmx["memsize"] = "8192"
+        vmware.vmx["numvcpus"] = "4"
+      end
 
       nixos.vm.synced_folder ".", "/home/vagrant/nix-cfg", type: "rsync"
 
