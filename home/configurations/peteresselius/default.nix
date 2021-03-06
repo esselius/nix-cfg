@@ -33,4 +33,8 @@
     chromedriver
     vim
   ];
+
+  home.sessionVariables = {
+    EDITOR = "vim";
+  };
 }
