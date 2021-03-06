@@ -1,4 +1,4 @@
-{ self, nixpkgs, darwin, flake-utils, flakebox, ... }@inputs:
+{ self, nixpkgs, darwin, flake-utils, flakebox, pre-commit-hooks, ... }@inputs:
 let
   inherit (nixpkgs.lib) filter fold recursiveUpdate setAttrByPath pipe removePrefix removeSuffix strings hasSuffix filesystem attrValues;
   inherit (flakebox.lib) vagrantBuildFlake;
@@ -9,108 +9,124 @@ in
   inherit overlays;
 
   importModulesDir = dir:
-    fold recursiveUpdate { } (map
-      (path:
-        setAttrByPath
-          (pipe path [
-            toString
-            (removePrefix "${toString dir}/")
-            (removeSuffix ".nix")
-            (strings.splitString "/")
-          ])
-          (import path)
-      )
-      (filter (path: ! hasSuffix "default.nix" (toString path)) (filesystem.listFilesRecursive dir)));
+    fold recursiveUpdate {} (
+      map
+        (
+          path:
+            setAttrByPath
+              (
+                pipe path [
+                  toString
+                  (removePrefix "${toString dir}/")
+                  (removeSuffix ".nix")
+                  (strings.splitString "/")
+                ]
+              )
+              (import path)
+        )
+        (filter (path: ! hasSuffix "default.nix" (toString path)) (filesystem.listFilesRecursive dir))
+    );
 
-  switchers = flake-utils.lib.eachDefaultSystem (system:
-    let
-      pkgs = import nixpkgs {
-        inherit system;
-        overlays = attrValues overlays;
-      };
+  switchers = flake-utils.lib.eachDefaultSystem (
+    system:
+      let
+        pre-commit-check = pre-commit-hooks.packages.${system}.run {
+          src = ./.;
 
-      inherit (pkgs) writeShellScriptBin;
-      inherit (pkgs.lib) makeBinPath;
+          hooks = {
+            nixpkgs-fmt.enable = true;
+          };
+        };
 
-      rawDarwinSystem = darwin.lib.darwinSystem {
-        modules = [ ({ pkgs, ... }: { nix.package = pkgs.nixFlakes; }) ];
-      };
-      darwinRebuild = "${rawDarwinSystem.system}/sw/bin/darwin-rebuild";
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = attrValues overlays;
+        };
 
-      nixosRebuild = "${pkgs.nixos-rebuild.override { nix = pkgs.nixUnstable; }}/bin/nixos-rebuild";
+        inherit (pkgs) writeShellScriptBin;
+        inherit (pkgs.lib) makeBinPath;
 
-      switchScripts = {
-        switchNixOS = writeShellScriptBin "switch-nixos" ''
-          ${nixosRebuild} switch --flake ${self} "$@"
-        '';
+        rawDarwinSystem = darwin.lib.darwinSystem {
+          modules = [ ({ pkgs, ... }: { nix.package = pkgs.nixFlakes; }) ];
+        };
+        darwinRebuild = "${rawDarwinSystem.system}/sw/bin/darwin-rebuild";
 
-        switchDarwin = writeShellScriptBin "switch-darwin" ''
-          set -euo pipefail
+        nixosRebuild = "${pkgs.nixos-rebuild.override { nix = pkgs.nixUnstable; }}/bin/nixos-rebuild";
 
-          export TERM="''${TERM/xterm-kitty/xterm-256color}"
+        switchScripts = {
+          switchNixOS = writeShellScriptBin "switch-nixos" ''
+            ${nixosRebuild} switch --flake ${self} "$@"
+          '';
 
-          if ! [[ -d /run ]]; then
-              if ! grep -q run /etc/synthetic.conf; then
-                  echo -e 'run\tprivate/var/run' | sudo tee -a /etc/synthetic.conf
-              fi
+          switchDarwin = writeShellScriptBin "switch-darwin" ''
+            set -euo pipefail
 
-              util=/System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util
+            export TERM="''${TERM/xterm-kitty/xterm-256color}"
 
-              # Big Sur switched to `-t`
-              if ($util -h || true) | grep -q '\-B'; then
-                  $util -B
-              else
-                  $util -t
-              fi
-          fi
+            if ! [[ -d /run ]]; then
+                if ! grep -q run /etc/synthetic.conf; then
+                    echo -e 'run\tprivate/var/run' | sudo tee -a /etc/synthetic.conf
+                fi
 
-          if [[ -L result ]]; then
-              unlink result
-          fi
+                util=/System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util
 
-          ${darwinRebuild} switch --flake ${self} "$@"
-          unlink result
-        '';
+                # Big Sur switched to `-t`
+                if ($util -h || true) | grep -q '\-B'; then
+                    $util -B
+                else
+                    $util -t
+                fi
+            fi
 
-        switchHome = writeShellScriptBin "switch-home" ''
-          set -euo pipefail
+            if [[ -L result ]]; then
+                unlink result
+            fi
 
-          export TERM="''${TERM/xterm-kitty/xterm-256color}"
+            ${darwinRebuild} switch --flake ${self} "$@"
+            unlink result
+          '';
 
-          export PATH=${makeBinPath [ pkgs.nixUnstable pkgs.git pkgs.jq ]}
+          switchHome = writeShellScriptBin "switch-home" ''
+            set -euo pipefail
 
-          out="$(nix --experimental-features 'nix-command flakes' build --json ".#homeManagerConfigurations.$USER.activationPackage" | jq -r .[].outputs.out)"
+            export TERM="''${TERM/xterm-kitty/xterm-256color}"
 
-          "$out"/activate
-        '';
+            export PATH=${makeBinPath [ pkgs.nixUnstable pkgs.git pkgs.jq ]}
 
-        rebuildNixOSVM = writeShellScriptBin "rebuild-nixos-vm" ''
-          set -e
-          rm -f packer_vmware-iso_vmware.box
+            out="$(nix --experimental-features 'nix-command flakes' build --json ".#homeManagerConfigurations.$USER.activationPackage" | jq -r .[].outputs.out)"
 
-          ${pkgs.callPackage vagrantBuildFlake { flake = self; }}/bin/packer-build-vmware-vagrant-box
+            "$out"/activate
+          '';
 
-          vagrant box add --force esselius/nix-cfg-nixos packer_vmware-iso_vmware.box
-          vagrant destroy -f nixos
-          vagrant up nixos
-        '';
-      };
-    in
-    {
-      apps = switchScripts;
+          rebuildNixOSVM = writeShellScriptBin "rebuild-nixos-vm" ''
+            set -e
+            rm -f packer_vmware-iso_vmware.box
 
-      devShell = pkgs.mkShell {
-        buildInputs = with pkgs; with switchScripts; [
-          gitMinimal
-          jq
+            ${pkgs.callPackage vagrantBuildFlake { flake = self; }}/bin/packer-build-vmware-vagrant-box
 
-          switchDarwin
-          switchHome
-          switchNixOS
+            vagrant box add --force esselius/nix-cfg-nixos packer_vmware-iso_vmware.box
+            vagrant destroy -f nixos
+            vagrant up nixos
+          '';
+        };
+      in
+        {
+          apps = switchScripts;
 
-          rebuildNixOSVM
-        ];
-      };
-    }
+          devShell = pkgs.mkShell {
+            inherit (pre-commit-check) shellHook;
+
+            buildInputs = with pkgs; with switchScripts; [
+              gitMinimal
+              jq
+
+              switchDarwin
+              switchHome
+              switchNixOS
+
+              rebuildNixOSVM
+            ];
+          };
+        }
   );
 }

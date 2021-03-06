@@ -1,3 +1,5 @@
 .vagrant
 result
 .vscode
+.direnv
+.pre-commit-config.yaml

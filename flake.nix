@@ -10,6 +10,7 @@
     home.url = "github:nix-community/home-manager";
     home.inputs.nixpkgs.follows = "nixpkgs";
 
+    pre-commit-hooks.url = "github:Myhlamaeus/pre-commit-hooks.nix/bd7cea29e61458bc3d29dccad6fb312dc1bc672d";
     flakebox.url = "github:esselius/nix-flakebox";
 
     dns-heaven.url = "github:jduepmeier/dns-heaven?rev=3a38e6cb0430753b579490b8bd4652e3fda5fc5d";
@@ -22,17 +23,17 @@
     let
       inherit (import ./lib inputs) switchers overlays importModulesDir;
     in
-    {
-      inherit overlays;
-      inherit (switchers) apps devShell;
+      {
+        inherit overlays;
+        inherit (switchers) apps devShell;
 
-      darwinModules = importModulesDir ./darwin/modules;
-      darwinConfigurations = import ./darwin/configurations inputs;
+        darwinModules = importModulesDir ./darwin/modules;
+        darwinConfigurations = import ./darwin/configurations inputs;
 
-      homeModules = importModulesDir ./home/modules;
-      homeManagerConfigurations = import ./home/configurations inputs;
+        homeModules = importModulesDir ./home/modules;
+        homeManagerConfigurations = import ./home/configurations inputs;
 
-      nixosModules = importModulesDir ./nixos/modules;
-      nixosConfigurations = import ./nixos/configurations inputs;
-    };
+        nixosModules = importModulesDir ./nixos/modules;
+        nixosConfigurations = import ./nixos/configurations inputs;
+      };
 }
