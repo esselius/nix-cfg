@@ -2,8 +2,9 @@
   ./home
   ./direnv
 
-  ./shells/fish.nix
-  ./terminals/kitty.nix
+  ./terminal/fish.nix
+  ./terminal/kitty.nix
+  ./terminal/tmux.nix
 
   ./system/nixpkgs.nix
 ]
