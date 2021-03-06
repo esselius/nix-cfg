@@ -1,23 +1,20 @@
-{ inputs, ... }:
-
+inputs:
 {
-  nixpkgs = {
-    config = {
-      allowUnfree = true;
-    };
-    overlays = [
-      (final: prev: {
-        dns-heaven = prev.callPackage ./dns-heaven { src = inputs.dns-heaven; };
-        viscosity-sh = prev.callPackage ./viscosity-sh { src = inputs.viscosity-sh; };
-      })
+  dns-heaven = final: prev: {
+    dns-heaven = prev.callPackage ./dns-heaven { src = inputs.dns-heaven; };
+  };
 
-      (final: prev: {
-        open-vm-tools = prev.open-vm-tools.overrideDerivation (oldAttrs: {
-          postPatch = oldAttrs.postPatch + ''
-            sed -i 's,/usr/bin/vmhgfs-fuse,/run/current-system/sw/bin/vmhgfs-fuse,' services/plugins/vix/foundryToolsDaemon.c
-          '';
-        });
-      })
-    ];
+  viscosity-sh = final: prev: {
+    viscosity-sh = prev.callPackage ./viscosity-sh { src = inputs.viscosity-sh; };
+  };
+
+  open-vm-tools = final: prev: {
+    open-vm-tools = prev.open-vm-tools.overrideDerivation (
+      oldAttrs: {
+        postPatch = oldAttrs.postPatch + ''
+          sed -i 's,/usr/bin/vmhgfs-fuse,/run/current-system/sw/bin/vmhgfs-fuse,' services/plugins/vix/foundryToolsDaemon.c
+        '';
+      }
+    );
   };
 }

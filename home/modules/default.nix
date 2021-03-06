@@ -4,5 +4,5 @@
   ./shells/fish.nix
   ./terminals/kitty.nix
 
-  ../../overlays
+  ./system/nixpkgs.nix
 ]

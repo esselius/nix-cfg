@@ -20,10 +20,10 @@
 
   outputs = inputs:
     let
-      lib = import ./lib inputs;
+      inherit (import ./lib inputs) switchers overlays importModulesDir;
     in
-    with lib;
     {
+      inherit overlays;
       inherit (switchers) apps devShell;
 
       darwinModules = importModulesDir ./darwin/modules;
