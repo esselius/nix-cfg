@@ -26,8 +26,6 @@
     hub
     ripgrep
     bfg-repo-cleaner
-    git
-    git-lfs
     vault
     stern
     chromedriver
