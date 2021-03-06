@@ -172,6 +172,22 @@
         "type": "github"
       }
     },
+    "log4brains": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1611253725,
+        "narHash": "sha256-Oh2B3dm1+a081gXvsLZbx0Gx88kl0xmq7Xcib0sPLJo=",
+        "owner": "thomvaill",
+        "repo": "log4brains",
+        "rev": "03c4df1b6aa002e981202a7c53c54618cf7d9157",
+        "type": "github"
+      },
+      "original": {
+        "owner": "thomvaill",
+        "repo": "log4brains",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1614784807,
@@ -249,6 +265,7 @@
         "flake-utils": "flake-utils",
         "flakebox": "flakebox",
         "home": "home",
+        "log4brains": "log4brains",
         "nixpkgs": "nixpkgs_2",
         "pre-commit-hooks": "pre-commit-hooks",
         "viscosity-sh": "viscosity-sh"

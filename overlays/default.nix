@@ -8,6 +8,10 @@ inputs:
     viscosity-sh = prev.callPackage ./viscosity-sh { src = inputs.viscosity-sh; };
   };
 
+  log4brains = final: prev: {
+    log4brains = prev.callPackage ./log4brains { src = inputs.log4brains; };
+  };
+
   open-vm-tools = final: prev: {
     open-vm-tools = prev.open-vm-tools.overrideDerivation (
       oldAttrs: {

@@ -17,6 +17,8 @@
     dns-heaven.flake = false;
     viscosity-sh.url = "github:andreax79/viscosity.sh?rev=407385f43f0c5d149af4eafa9f6ae09e7895288d";
     viscosity-sh.flake = false;
+    log4brains.url = "github:thomvaill/log4brains";
+    log4brains.flake = false;
   };
 
   outputs = inputs:

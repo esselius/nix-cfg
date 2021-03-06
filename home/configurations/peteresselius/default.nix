@@ -30,6 +30,7 @@
     stern
     chromedriver
     vim
+    log4brains
   ];
 
   home.sessionVariables = {
