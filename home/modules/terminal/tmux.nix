@@ -2,9 +2,11 @@
   programs.tmux = {
     enable = true;
 
+    terminal = "screen-256color";
+
     keyMode = "vi";
     shortcut = "a";
-    terminal = "screen-256color";
+    customPaneNavigationAndResize = true;
 
     extraConfig = ''
       set-option -g mouse on

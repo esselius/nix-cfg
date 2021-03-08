@@ -1,3 +1,5 @@
+{ pkgs, ... }:
+
 {
   programs = {
     fish = {
@@ -35,6 +37,9 @@
       };
 
       shellInit = ''
+        set -x DIRENV_LOG_FORMAT ""
+        ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
+
         source /etc/fish/config.fish
 
         # For all those secrets
