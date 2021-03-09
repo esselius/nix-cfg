@@ -13,7 +13,6 @@
     google-cloud-sdk
     sbt
     cowsay
-    nodejs
     viscosity-sh
     qemu
     ghq
@@ -30,7 +29,7 @@
     stern
     chromedriver
     vim
-    log4brains
+    # log4brains
   ];
 
   home.sessionVariables = {

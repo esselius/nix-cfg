@@ -46,15 +46,15 @@
             # ];
 
             casks = [
-              "vmware-fusion"
-              "vagrant"
-              "vagrant-vmware-utility"
-              "alfred"
-              "xquartz"
-              "monitorcontrol"
-              "virtualbox"
-              "virtualbox-extension-pack"
               "1password"
+              "alfred"
+              "monitorcontrol"
+              "vagrant-vmware-utility"
+              "vagrant"
+              "virtualbox-extension-pack"
+              "virtualbox"
+              "vmware-fusion"
+              "xquartz"
             ];
           };
         }
