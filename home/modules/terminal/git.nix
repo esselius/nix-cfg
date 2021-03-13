@@ -34,6 +34,26 @@
     ];
 
     extraConfig = {
+      init = {
+        defaultBranch = "main";
+      };
+      rebase = {
+        autoSquash = true;
+        authStash = true;
+      };
+      rerere = {
+        enabled = true;
+        autoUpdate = true;
+      };
+      pull = {
+        rebase = true;
+      };
+      push = {
+        default = "simple";
+      };
+      color = {
+        ui = "auto";
+      };
       ghq = {
         root = "~/src";
       };
