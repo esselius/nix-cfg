@@ -10,10 +10,13 @@
           programs = {
             fish.enable = true;
             zsh.enable = true;
+            gnupg.agent = {
+              enable = true;
+              enableSSHSupport = true;
+            };
           };
 
           services = {
-            yubikey-agent.enable = true;
             dns-heaven.enable = true;
             skhd.enable = true;
             spacebar.enable = true;
@@ -41,10 +44,6 @@
           homebrew = {
             enable = true;
 
-            # taps = [
-            #   "esselius/personal"
-            # ];
-
             casks = [
               "1password"
               "alfred"
@@ -71,14 +70,6 @@
           programs = {
             fish.enable = true;
             zsh.enable = true;
-          };
-
-          services = {
-            yubikey-agent.enable = false;
-            dns-heaven.enable = false;
-            skhd.enable = false;
-            spacebar.enable = false;
-            yabai.enable = false;
           };
 
           users.users.vagrant = {

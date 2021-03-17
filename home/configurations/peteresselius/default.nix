@@ -29,7 +29,10 @@
     stern
     chromedriver
     vim
+    dhall-lsp-server
+    dhall
     # log4brains
+    ruby
   ];
 
   home.sessionVariables = {

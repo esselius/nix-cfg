@@ -5,7 +5,7 @@
     delta = {
       enable = true;
       options = {
-        features = "side-by-side line-numbers decorations";
+        # features = "side-by-side line-numbers decorations";
         syntax-theme = "Solarized (light)";
       };
     };
@@ -39,7 +39,7 @@
       };
       rebase = {
         autoSquash = true;
-        authStash = true;
+        autoStash = true;
       };
       rerere = {
         enabled = true;
