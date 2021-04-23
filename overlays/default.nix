@@ -1,5 +1,7 @@
 inputs:
 {
+  emacs = inputs.emacs.overlay;
+
   dns-heaven = final: prev: {
     dns-heaven = prev.callPackage ./dns-heaven { src = inputs.dns-heaven; };
   };

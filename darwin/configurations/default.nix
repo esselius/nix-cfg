@@ -9,6 +9,9 @@
 
           programs = {
             fish.enable = true;
+            fish.shellInit = ''
+              export PATH=/usr/local/smlnj/bin:"$PATH"
+            '';
             zsh.enable = true;
             gnupg.agent = {
               enable = true;
@@ -54,6 +57,7 @@
               "virtualbox"
               "vmware-fusion"
               "xquartz"
+              "smlnj"
             ];
           };
         }

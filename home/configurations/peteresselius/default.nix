@@ -33,6 +33,21 @@
     dhall
     # log4brains
     ruby
+    etcdctl
+    deno
+    scalafmt
+    git-quick-stats
+    (
+      emacsWithPackagesFromUsePackage {
+        package = emacsMacport;
+        config = ../../emacs.el;
+
+        extraEmacsPackages = epkgs: [
+          epkgs.sml-mode
+          epkgs.evil
+        ];
+      }
+    )
   ];
 
   home.sessionVariables = {
