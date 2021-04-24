@@ -2,14 +2,13 @@
   description = "Nix Config of Pepp";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/be07f22e465825f4465a754725c4be27565f2bff";
+    nixpkgs.url = "github:nixos/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
 
     darwin.url = "github:lnl7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home.url = "github:nix-community/home-manager";
     home.inputs.nixpkgs.follows = "nixpkgs";
-    emacs.url = "github:nix-community/emacs-overlay";
 
     pre-commit-hooks.url = "github:Myhlamaeus/pre-commit-hooks.nix/bd7cea29e61458bc3d29dccad6fb312dc1bc672d";
     flakebox.url = "github:esselius/nix-flakebox";

@@ -2,8 +2,7 @@
 
 {
   imports =
-    (import ../../modules) ++
-    [
+    (import ../../modules) ++ [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./hardware-builder.nix
@@ -53,6 +52,7 @@
     members = [ "vagrant" ];
   };
   users.users.vagrant = {
+    isNormalUser = true;
     description = "Vagrant User";
     name = "vagrant";
     group = "vagrant";
