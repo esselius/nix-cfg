@@ -40,11 +40,17 @@
         set -x DIRENV_LOG_FORMAT ""
         ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
 
-        source /etc/fish/config.fish
+        if test -e /etc/fish/config.fish
+          source /etc/fish/config.fish
+        end
 
         # For all those secrets
         if test -e ~/.config/fish/env.fish
           source ~/.config/fish/env.fish
+        end
+
+        for env in /run/secrets/env/$USER/*
+          set -x (basename "$env") (cat "$env")
         end
       '';
     };
@@ -58,15 +64,6 @@
         git_status.disabled = true;
         kubernetes = {
           disabled = false;
-          context_aliases = {
-            gke_pagero-cluster-api_europe-north1_cluster-api = "gke-cluster-api";
-            gke_pagero-build_europe-north1_build-regional = "gke-build";
-            gke_pagero-prod_europe-north1_production = "gke-prod";
-            gke_pagero-staging_europe-north1_staging = "gke-staging";
-            gke_pagero-test_europe-north1_test = "gke-test";
-            "prod-1-cluster-1-admin@prod-1-cluster-1" = "nrd-prod-1";
-            "staging-1-cluster-1-admin@staging-1-cluster-1" = "nrd-staging-1";
-          };
         };
       };
     };

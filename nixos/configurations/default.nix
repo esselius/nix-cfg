@@ -1,12 +1,12 @@
-{ self, nixpkgs, home, ... }@inputs:
+{ self, nixpkgs, home, flakebox, agenix, ... }@inputs:
 {
-  nixbox = nixpkgs.lib.makeOverridable nixpkgs.lib.nixosSystem {
-    system = "x86_64-linux";
+  nixos = flakebox.lib.vagrantNixosConfig {
     modules = [
-      ./nixbox-vmware/configuration.nix
-
       {
-        imports = [ home.nixosModules.home-manager ];
+        imports = [
+          home.nixosModule
+          agenix.nixosModules.age
+        ];
 
         home-manager.useGlobalPkgs = false;
         home-manager.useUserPackages = false;
@@ -16,6 +16,54 @@
 
         home-manager.users.vagrant = import ../../home/configurations/peteresselius;
       }
-    ];
+      # ({ pkgs, ... }: {
+      #   services = {
+      #     kibana = {
+      #       enable = true;
+      #       package = pkgs.kibana7;
+      #     };
+      #     elasticsearch = {
+      #       enable = true;
+      #       package = pkgs.elasticsearch7;
+      #     };
+      #     journalbeat = {
+      #       enable = true;
+      #       package = pkgs.journalbeat7;
+      #       extraConfig = ''
+      #         output.elasticsearch:
+      #           hosts: [ "http://localhost:9200" ]
+      #       '';
+      #     };
+      #     logstash = {
+      #       enable = true;
+      #       package = pkgs.logstash7;
+      #       outputConfig = ''
+      #         elasticsearch {
+      #           hosts => [ "http://localhost:9200" ]
+      #         }
+      #       '';
+      #     };
+      #     metricbeat = {
+      #       enable = true;
+      #       package = pkgs.metricbeat7;
+      #       modules.system = {
+      #         metricsets = [ "cpu" "load" "memory" "network" "process" "process_summary" "uptime" "socket_summary" ];
+      #         enabled = true;
+      #         period = "5s";
+      #         processes = [ ".*" ];
+      #         cpu.metrics = [ "percentages" "normalized_percentages" ];
+      #         core.metrics = [ "percentages" ];
+      #       };
+      #       settings = {
+      #         output.elasticsearch = {
+      #           hosts = [ "127.0.0.1:9200" ];
+      #         };
+      #       };
+      #     };
+
+      #   };
+      # })
+    ] ++ import ../modules;
   };
 }
+

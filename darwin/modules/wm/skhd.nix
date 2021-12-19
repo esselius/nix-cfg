@@ -21,7 +21,7 @@
         shift + cmd - return : yabai -m window --toggle zoom-fullscreen
 
         # open terminal
-        alt - return         : open -a kitty
+        # alt - return         : open -a kitty
       '';
     };
   };

@@ -10,8 +10,7 @@
   home.packages = with pkgs; [
     nixpkgs-fmt
     cmatrix
-    google-cloud-sdk
-    sbt
+    # google-cloud-sdk
     cowsay
     viscosity-sh
     qemu
@@ -37,9 +36,13 @@
     deno
     scalafmt
     git-quick-stats
+    # jetbrains.idea-ultimate
+    # firefox
+    # jdk
+    unzip
+    gnupg
+    gh
+    ngrok
   ];
 
-  home.sessionVariables = {
-    EDITOR = "vim";
-  };
 }

@@ -16,10 +16,11 @@
         window_gap = "10";
 
         auto_balance = "on";
-        # focus_follows_mouse = "autofocus";
+#        focus_follows_mouse = "autofocus";
 
         mouse_modifier = "alt";
-        mouse_action1 = "resize";
+        # mouse_action1 = "resize";
+        # mouse_action2 = "move" 
         mouse_drop_action = "swap";
       };
 

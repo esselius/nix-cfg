@@ -3,6 +3,7 @@
   Pepps-MacBook-Pro = darwin.lib.darwinSystem
     {
       inherit inputs;
+      system = "x86_64-darwin";
       modules = [
         {
           imports = import ../modules;
@@ -13,9 +14,11 @@
               export PATH=/usr/local/smlnj/bin:"$PATH"
             '';
             zsh.enable = true;
-            gnupg.agent = {
-              enable = true;
-              enableSSHSupport = true;
+            gnupg = {
+              agent = {
+                enable = true;
+                enableSSHSupport = true;
+              };
             };
           };
 
@@ -47,10 +50,15 @@
           homebrew = {
             enable = true;
 
+            brews = [
+              "minikube"
+              "docker-machine-driver-vmware"
+            ];
+
             casks = [
               "1password"
               "alfred"
-              "monitorcontrol"
+              # "monitorcontrol"
               "vagrant-vmware-utility"
               "vagrant"
               "virtualbox-extension-pack"
@@ -58,6 +66,7 @@
               "vmware-fusion"
               "xquartz"
               "smlnj"
+              "google-cloud-sdk"
             ];
           };
         }
@@ -67,6 +76,7 @@
   Vagrants-Mac = darwin.lib.darwinSystem
     {
       inherit inputs;
+      system = "x86_64-darwin";
       modules = [
         {
           imports = import ../modules;
@@ -82,7 +92,7 @@
         }
 
         {
-          imports = [ home.darwinModules.home-manager ];
+          imports = [ home.darwinModule ];
 
           home-manager.useGlobalPkgs = false;
           home-manager.useUserPackages = false;

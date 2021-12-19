@@ -2,6 +2,9 @@
   programs.git = {
     enable = true;
     lfs.enable = true;
+
+    userName = "Peter Esselius";
+
     delta = {
       enable = true;
       options = {
@@ -9,8 +12,6 @@
         syntax-theme = "Solarized (light)";
       };
     };
-
-    userName = "Peter Esselius";
 
     aliases = {
       l = "log --graph --decorate --pretty=format:\"%C(yellow)%h%C(reset)%C(auto)%d%C(reset) %s %C(yellow)(%C(cyan)%ar%C(yellow), %C(blue)%an%C(yellow))%C(reset)\"";
